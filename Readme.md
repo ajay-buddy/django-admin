@@ -11,7 +11,12 @@ python manage.py createsuperuser
 python manage.py shell
 
 <!-- genereate fake data for Blog -->
-from blog.models import Blog
+from blog.models import Blog, Comment
 from faker import Faker
+faker = Faker()
 for _ in range(100):
     Blog.objects.create(name=faker.sentence(), text=faker.paragraph())
+
+for blog in Blog.objects.all():
+    comments = [Comment(text=faker.paragraph(), blog=blog) for _ in range(3)]
+    Comment.objects.bulk_create(comments)

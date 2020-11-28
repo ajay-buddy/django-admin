@@ -18,3 +18,12 @@ class Blog(models.Model):
     def day_since_created(self):
         diff = timezone.now() - self.created_date
         return diff.days
+
+class Comment(models.Model):
+    blog            = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE)
+    text            = models.TextField()
+    is_active       = models.BooleanField(default=True)
+    created_date    = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text

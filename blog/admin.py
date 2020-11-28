@@ -2,9 +2,15 @@ from django.contrib import admin
 from django.utils import timezone
 from django_summernote.admin import SummernoteModelAdmin
 
-from blog.models import Blog
+from blog.models import Blog, Comment
 
 # Register your models here.
+
+# admin.StackedInline or admin.TabularInline
+class InlineComments(admin.StackedInline):
+    model = Comment
+    fields = ('text', 'is_active')
+    extra = 1
 
 class BlogAdmin(SummernoteModelAdmin):
     list_display = ('name', 'day_since_created', 'day_since_last_updated', 'created_date', 'last_modified', 'is_draft')
@@ -23,10 +29,11 @@ class BlogAdmin(SummernoteModelAdmin):
         }),
         ('Advanced Options', {
             'fields': ('is_draft',)
-        })
+        }),
     )
 
     summernote_fields = ('text',)
+    inlines = (InlineComments,)
 
     def get_ordering(self, request):
         if request.user.is_superuser:
@@ -44,5 +51,10 @@ class BlogAdmin(SummernoteModelAdmin):
         return diff.days
     day_since_last_updated.short_description = 'Days Modified'
 
+class BlogComment(SummernoteModelAdmin):
+    list_display = ('blog', 'text', 'created_date', 'is_active')
+    summernote_fields = ('text',)
+
 
 admin.site.register(Blog, BlogAdmin)
+admin.site.register(Comment, BlogComment)

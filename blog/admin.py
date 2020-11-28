@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.db.models import Count
 from django_summernote.admin import SummernoteModelAdmin
 
-from blog.models import Blog, Comment
+from blog.models import Blog, Comment, Catagory
 
 # Register your models here.
 
@@ -31,13 +31,15 @@ class BlogAdmin(SummernoteModelAdmin):
             # 'classes': ('collapse', )
         }),
         ('Advanced Options', {
-            'fields': ('is_draft',),
+            'fields': ('is_draft', 'catagories'),
             'classes': ('collapse', )
         }),
     )
 
     summernote_fields = ('text',)
     inlines = (InlineComments,)
+    filter_horizontal = ('catagories', )
+    # filter_vertical = ('catagories', )
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -75,3 +77,4 @@ class BlogComment(SummernoteModelAdmin):
 
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(Comment, BlogComment)
+admin.site.register(Catagory)

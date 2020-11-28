@@ -10,6 +10,7 @@ class Blog(models.Model):
     is_draft        = models.BooleanField(default=True)
     created_date    = models.DateTimeField(auto_now_add=True)
     last_modified   = models.DateTimeField(auto_now=True)
+    catagories      = models.ManyToManyField('blog.Catagory')
 
     def __str__(self):
         return self.name
@@ -27,3 +28,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+class Catagory(models.Model):
+    name        = models.CharField(max_length=256)
+    is_active   = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = 'Catagories'
+
+    def __str__(self):
+        return self.name

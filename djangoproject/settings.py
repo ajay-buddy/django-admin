@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_summernote',
+    'django_admin_listfilter_dropdown',
+    'rangefilter',
+    'admin_honeypot',
+    # 'djgeojson',
+    # 'leaflet',
 
     'blog.apps.BlogConfig',
 ]

@@ -2,3 +2,8 @@ Django>=3.0,<4.0
 psycopg2-binary>=2.8
 Faker
 django-summernote
+django-admin-list-filter-dropdown
+django-admin-rangefilter
+django-leaflet
+django-geojson
+django-admin-honeypot

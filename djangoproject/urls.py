@@ -25,7 +25,8 @@ admin.site.index_title = "Blog Administration"
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('admin-login/', admin.site.urls),
     path('summernote', include('django_summernote.urls')),
 ]
 

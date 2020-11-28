@@ -1,6 +1,9 @@
-sudo docker-compose run web django-admin startproject djangoproject .
-chown -R $USER:$USER .
 
+<!-- docker commands -->
+docker-compose up
+docker exec -it <container id> bash
+
+<!-- Usefull commands -->
 python manage.py migrate
 python manage.py migrate <app name>
 python manage.py makemigrations
@@ -10,7 +13,7 @@ python manage.py createsuperuser
 
 python manage.py shell
 
-<!-- genereate fake data for Blog -->
+<!-- commands to generate fake data -->
 from blog.models import Blog, Comment, Catagory
 from faker import Faker
 faker = Faker()

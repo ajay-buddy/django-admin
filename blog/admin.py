@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils import timezone
+from django.db.models import Count
 from django_summernote.admin import SummernoteModelAdmin
 
 from blog.models import Blog, Comment
@@ -11,9 +12,10 @@ class InlineComments(admin.StackedInline):
     model = Comment
     fields = ('text', 'is_active')
     extra = 1
+    classes = ('collapse', )
 
 class BlogAdmin(SummernoteModelAdmin):
-    list_display = ('name', 'day_since_created', 'day_since_last_updated', 'created_date', 'last_modified', 'is_draft')
+    list_display = ('name', 'day_since_created', 'day_since_last_updated', 'number_comments', 'created_date', 'last_modified', 'is_draft')
     list_filter = ('is_draft', 'created_date', 'last_modified')
     ordering = ('name', 'created_date', 'last_modified')
     search_fields = ('name', 'slug')
@@ -25,15 +27,28 @@ class BlogAdmin(SummernoteModelAdmin):
     fieldsets = (
         ('Basic Details', {
             'fields': (('name','slug'), 'text', ),
-            'description': '* Blog details'
+            'description': '* Blog details',
+            # 'classes': ('collapse', )
         }),
         ('Advanced Options', {
-            'fields': ('is_draft',)
+            'fields': ('is_draft',),
+            'classes': ('collapse', )
         }),
     )
 
     summernote_fields = ('text',)
     inlines = (InlineComments,)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.annotate(comments_count=Count('comments'))
+        return qs
+
+    def number_comments(self, blog):
+        return blog.comments_count
+
+    number_comments.short_description = 'Comments'
+    number_comments.admin_order_field = 'comments_count'
 
     def get_ordering(self, request):
         if request.user.is_superuser:
@@ -53,6 +68,8 @@ class BlogAdmin(SummernoteModelAdmin):
 
 class BlogComment(SummernoteModelAdmin):
     list_display = ('blog', 'text', 'created_date', 'is_active')
+    list_editable = ('is_active',)
+    list_per_page = 20
     summernote_fields = ('text',)
 
 
